@@ -1,0 +1,36 @@
+{
+  "name": "portals",
+  "version": "0.1.0",
+  "description": "An XHR/Ajax library with sugar for single page applications.",
+  "main": "portals.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:HelpfulHuman/Portals.git"
+  },
+  "keywords": [
+    "xhr",
+    "ajax",
+    "api",
+    "services",
+    "abstraction",
+    "portals"
+  ],
+  "author": "Nick Glenn <nick@helpfulhuman.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HelpfulHuman/Portals/issues"
+  },
+  "homepage": "https://github.com/HelpfulHuman/Portals",
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.5.2",
+    "gulp-jshint": "^1.11.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-util": "^3.0.5",
+    "mocha": "^2.2.5"
+  }
+}
