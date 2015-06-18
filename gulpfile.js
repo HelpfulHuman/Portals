@@ -1,6 +1,33 @@
 var gulp   = require('gulp')
   , uglify = require('gulp-uglify')
-  , rename = require('gulp-rename');
+  , rename = require('gulp-rename')
+  , jshint = require('gulp-jshint')
+  , jscs   = require('gulp-jscs')
+  , mocha  = require('gulp-mocha')
+  , stylish = require('jshint-stylish');
+
+/**
+ * LINT
+ * Ensures that the library code obeys hinting and
+ * style guide rules.
+ */
+gulp.task('lint', function () {
+  return gulp.src('./**/*.js')
+    .pipe(jscs())
+    .pipe(jshint())
+    .pipe(jshint.reporter(stylish));
+});
+
+/**
+ * TEST
+ * Run tests on file change.
+ */
+gulp.task('test', function () {
+  return gulp.src('./test/**/*.js', {read: false})
+    .pipe(mocha({
+      timeout: 5000
+    }));
+});
 
 /**
  * BUILD
@@ -18,6 +45,7 @@ gulp.task('build', function () {
  * Watches for file changes.
  */
 gulp.task('watch', ['build'], function () {
+  gulp.watch('./**/*.js', ['lint']);
   gulp.watch('./portals.js', ['compile']);
 });
 
