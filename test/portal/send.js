@@ -23,7 +23,7 @@ describe('Portal#send()', function () {
   /**
    * @test
    */
-  it('sends a simple request with success', function (done) {
+  it('sends a simple GET request with success', function (done) {
     var opts = { method: 'GET', url: '/' };
     var data = JSON.stringify({ foo: 'bar' });
     var promise = web.send(opts);
@@ -42,8 +42,8 @@ describe('Portal#send()', function () {
   /**
    * @test
    */
-  it('sends a simple request with failure', function (done) {
-    var opts = { method: 'POST', url: '/', body: 'hey' };
+  it('sends a simple GET request with success', function (done) {
+    var opts = { method: 'GET', url: '/' };
     var data = JSON.stringify({ foo: 'bar' });
     var promise = web.send(opts);
 
@@ -51,9 +51,9 @@ describe('Portal#send()', function () {
     this.requests[0].respond(402, {}, data);
 
     // proceed with promise resolution
-    promise.catch(function (res) {
-      expect(res.status).to.equal(402);
-      expect(res.body).to.equal(opts.body);
+    promise.catch(function (err) {
+      expect(err.status).to.equal(402);
+      expect(err.body).to.equal(data);
       done();
     });
   });
