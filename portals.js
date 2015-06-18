@@ -139,6 +139,7 @@
     }
 
     // prepare the request
+    var self = this;
     var xhr = new XMLHttpRequest();
 
     xhr.open(opts.method.toUpperCase(), opts.url, true);
@@ -147,14 +148,14 @@
       xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
           var response = {
-            status: xhr.status,
-            headers: xhr.responseHeaders,
-            body: xhr.responseText
+            status: this.status,
+            headers: this.responseHeaders,
+            body: this.responseText
           };
 
           // loop through the response interceptors
-          for (var i = 0; i < this._responseInterceptors.length; i++) {
-            response = this._responseInterceptors[i].call(this, response)
+          for (var i = 0; i < self._responseInterceptors.length; i++) {
+            response = self._responseInterceptors[i].call(self, response)
 
             // make sure that the options object is still an object
             if (typeof response !== 'object') {
@@ -162,7 +163,7 @@
             }
           }
 
-          if (xhr.status === 200) resolve(response);
+          if (this.status === 200) resolve(response);
           else reject(response);
         }
       }
@@ -173,7 +174,7 @@
       xhr.setRequestHeader(key, opts.headers[key]);
     }
 
-    xhr.send(opts.body);
+    xhr.send(opts.data || opts.body || null);
 
     return promise;
   }
