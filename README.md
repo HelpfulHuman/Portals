@@ -148,3 +148,10 @@ Uses the `globals` object on a `Portal` instance as a set of defaults that the r
 
 Concatenates the `hostname` and `url` for the request if "http" is not present in the URL.  
 
+#### `encodeJsonRequest`
+
+Encodes the `data` object as JSON if the `Content-Type` header contains `"json"`.
+
+#### `parseJsonResponse`
+
+Parses the `body` of the response if the `Content-Type` header contains `"json"`.
