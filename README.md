@@ -1,4 +1,4 @@
-# Portals
+# Portals [![Build Status](https://travis-ci.org/HelpfulHuman/Portals.svg?branch=master)](https://travis-ci.org/HelpfulHuman/Portals)
 
 Portals is a library for making XHR/AJAX requests with some syntactic sugar.
 
