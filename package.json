@@ -4,7 +4,7 @@
   "description": "An XHR/Ajax library with sugar for single page applications.",
   "main": "portals.js",
   "scripts": {
-    "test": "mocha test"
+    "test": "gulp ci"
   },
   "repository": {
     "type": "git",

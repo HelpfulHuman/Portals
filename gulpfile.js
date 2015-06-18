@@ -50,6 +50,12 @@ gulp.task('watch', ['build'], function () {
 });
 
 /**
+ * CI
+ * Run steps for Travis CI to test and approve.
+ */
+gulp.task('ci', ['test']);
+
+/**
  * DEFAULT
  */
 gulp.task('default', ['watch']);
