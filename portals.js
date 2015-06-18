@@ -13,6 +13,37 @@
   }
 
   /**
+   * Merges multiple objects together into a single object and
+   * returns said object.
+   *
+   * @param  {Object} out
+   * @return {Object}
+   */
+  var deepExtend = function (out) {
+    out = out || {};
+
+    for (var i = 1; i < arguments.length; i++) {
+      var obj = arguments[i];
+
+      if (!obj) continue;
+
+      for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          if (typeof obj[key] === 'object') {
+            out[key] = out[key] || {};
+            deepExtend(out[key], obj[key]);
+          }
+          else {
+            out[key] = obj[key];
+          }
+        }
+      }
+    }
+
+    return out;
+  }
+
+  /**
    * Validates request options and ensures URL and method are provided.
    *
    * @param  {Object} options
@@ -39,9 +70,7 @@
    * @return {Object}
    */
   var mergeGlobalsRequestInterceptor = function (options) {
-
-    // TODO merge the globals into the options
-    options.headers = this.globals.headers;
+    options = deepExtend({}, this.globals, options);
 
     return options;
   }
