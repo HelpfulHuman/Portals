@@ -12,7 +12,7 @@ var gulp   = require('gulp')
  * style guide rules.
  */
 gulp.task('lint', function () {
-  return gulp.src('./**/*.js')
+  return gulp.src(['./portals.js', './test/**/*.js'])
     .pipe(jscs())
     .pipe(jshint())
     .pipe(jshint.reporter(stylish));
@@ -45,7 +45,7 @@ gulp.task('build', function () {
  * Watches for file changes.
  */
 gulp.task('watch', ['build'], function () {
-  gulp.watch('./**/*.js', ['lint']);
+  gulp.watch(['./portals.js', './test/**/*.js'], ['lint']);
   gulp.watch('./portals.js', ['compile']);
 });
 
