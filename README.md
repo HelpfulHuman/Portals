@@ -158,7 +158,9 @@ Concatenates the `hostname` and `url` for the request if "http" is not present i
 http.onRequest( portals.interceptors.buildUrlRequest )
 ```
 
-### URL Parameter Customization
+### [PLANNED] URL Parameter Customization
+
+_Note: This interceptor has yet to be built._
 
 Allow tokens to be added to the url string and have those tokens replaced with matching key values from a "params" object.
 
@@ -182,7 +184,9 @@ http.send({
 http.onRequest( portals.interceptors.parseUrlParamsRequest )
 ```
 
-### Query String Configuration
+### [PLANNED] Query String Configuration
+
+_Note: This interceptor has yet to be built._
 
 Builds a query string out of a "query" object.
 
