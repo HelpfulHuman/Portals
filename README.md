@@ -6,43 +6,54 @@ The goals of this project are as follows:
 
 * Highly extensible
 * Shared options between requests
-* Supports promises
-* Smallest file size possible
+* Supports promises (and uses ES6 promises when available)
+* Smallest file size possible (under 4kb minified desired)
 * As few dependencies as possible
 
 ## Getting Started
 
-Install via NPM
+### Install via NPM
 
 ```
 npm install --save portals
 ```
 
-Install via Bower
+And make sure to `require` it:
+
+```javascript
+var portals = require('portals')
+```
+
+### Install via Bower
 
 ```
 bower install --save portals
 ```
 
-Then just instantiate an instance of the `Portal` class.
+## Create an Instance
+
+Once installed, just instantiate an instance of the `Portal` constructor.
 
 ```javascript
-var portals = require('portals')
-
 var http = new portals.Portal()
 ```
 
 ## Sending Requests
 
-Sending requests isn't all that different from other libraries of this nature.
+Sending requests isn't all that different from other libraries of this nature.  Simply supply a request object with url and method, along with any other request details you may need like a headers object, request body, etc...
+
+The `send()` method, and the helper methods, will return a standard promise with `then()` for successful (200 status code) responses and `catch()` for errors.
 
 ```javascript
 http.send({
   method: 'GET',
-  url: '/some-endpoint'
+  url: '/some-endpoint',
+  headers: {
+    'Accept': 'application/json'
+  }
 })
 .then(function (res) {
-  console.log(res)
+  // do something with response
 })
 ```
 
@@ -115,16 +126,15 @@ http.get('/my-endpoint')
 // response body will be "intercepted!!!"
 ```
 
-## Globals
+## Features
+
+All features are just interceptors that come with the library.  These are available on the `interceptors` property and are automatically added when `useDefaultInterceptors()` is called.
+
+### Globals
 
 Often times you may need to set a global value, like a set of headers or default hostname for your request URLs.  This is where using globals and the `mergeGlobalsRequest` interceptor comes in handy.
 
 ```javascript
-var http = new portals.Portal()
-
-// you don't need this if you called the "useDefaultInterceptors()" method
-http.onRequest(portals.interceptors.mergeGlobalsRequest)
-
 http.globals.hostname = 'http://some-api.com'
 http.globals.headers.Accept = 'application/yml'
 
@@ -132,26 +142,86 @@ http.get('/my-endpoint')
 // will call "http://some-api.com/my-endpoint"
 ```
 
-## Default Interceptors
+##### Standalone Usage
 
-These are interceptors that come available on the `interceptors` property.
+```javascript
+http.onRequest( portals.interceptors.mergeGlobalsRequest )
+```
 
-#### `validateRequest`
-
-Ensures that the request is properly prepared.
-
-#### `mergeGlobalsRequest`
-
-Uses the `globals` object on a `Portal` instance as a set of defaults that the request is applied to.
-
-#### `buildUrlRequestInterceptor`
+### Concatenate Hostname and Url
 
 Concatenates the `hostname` and `url` for the request if "http" is not present in the URL.  
 
-#### `encodeJsonRequest`
+##### Standalone Usage
 
-Encodes the `data` object as JSON if the `Content-Type` header contains `"json"`.
+```javascript
+http.onRequest( portals.interceptors.buildUrlRequest )
+```
 
-#### `parseJsonResponse`
+### URL Parameter Customization
+
+Allow tokens to be added to the url string and have those tokens replaced with matching key values from a "params" object.
+
+**Example:**
+
+```javascript
+http.send({
+  method: 'GET',
+  url: '/posts/:postId',
+  params: {
+    postId: 100
+  }
+})
+
+// hits "/posts/100"
+```
+
+##### Standalone Usage
+
+```javascript
+http.onRequest( portals.interceptors.parseUrlParamsRequest )
+```
+
+### Query String Configuration
+
+Builds a query string out of a "query" object.
+
+**Example:**
+
+```javascript
+http.send({
+  method: 'GET',
+  url: '/posts',
+  query: {
+    page: 20
+  }
+})
+
+// hits "/posts?page=20"
+```
+
+##### Standalone Usage
+
+```javascript
+http.onRequest( portals.interceptors.buildQueryRequest )
+```
+
+### Encode JSON Request Body
+
+Encodes a `data` or `body` object as JSON if the `Content-Type` header contains `"json"` and sets it as the request body.
+
+##### Standalone Usage
+
+```javascript
+http.onRequest( portals.interceptors.encodeJsonRequest )
+```
+
+### Parse JSON Response Body
 
 Parses the `body` of the response if the `Content-Type` header contains `"json"`.
+
+##### Standalone Usage
+
+```javascript
+http.onRequest( portals.interceptors.parseJsonResponse )
+```

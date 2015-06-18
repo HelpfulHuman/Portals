@@ -74,7 +74,7 @@
     if (options.data
         && typeof options.headers['Content-Type'] === 'string'
         && options.headers['Content-Type'].indexOf('json') !== -1) {
-      options.data = JSON.stringify(options.data);
+      options.body = JSON.stringify(options.data || options.body);
     }
 
     return options;

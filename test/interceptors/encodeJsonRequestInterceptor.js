@@ -23,7 +23,7 @@ describe('encodeJsonRequestInterceptor', function () {
     var jsonData = JSON.stringify(opts.data);
     var res  = encodeJsonRequestInterceptor(opts);
 
-    expect(res.data).to.equal(jsonData);
+    expect(res.body).to.equal(jsonData);
   });
 
 });
