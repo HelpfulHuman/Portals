@@ -35,5 +35,6 @@
     "sinon": "^1.15.3"
   },
   "dependencies": {
+    "promise": "^7.0.3"
   }
 }
