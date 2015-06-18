@@ -65,6 +65,37 @@
   }
 
   /**
+   * Encodes the request body as JSON.
+   *
+   * @param  {Object} options
+   * @return {Object}
+   */
+  var encodeJsonRequestInterceptor = function (options) {
+    if (options.data
+        && typeof options.headers['Content-Type'] === 'string'
+        && options.headers['Content-Type'].indexOf('json') !== -1) {
+      options.data = JSON.stringify(options.data);
+    }
+
+    return options;
+  }
+
+  /**
+   * Parses the response if JSON.
+   *
+   * @param  {Object} response
+   * @return {Object}
+   */
+  var parseJsonResponseInterceptor = function (response) {
+    if (response.headers['Content-Type']
+        && response.headers['Content-Type'].indexOf('json') !== -1) {
+      response.body = JSON.parse(response.body);
+    }
+
+    return response;
+  }
+
+  /**
    * Constructor: Generate a new "Portal" instance.
    */
   var Portal = function () {
@@ -266,7 +297,6 @@
     return port;
   }
 
-
   /**
    * EXPORT
    * Export via CommonJS or attach it to the window.
@@ -277,7 +307,7 @@
     interceptors: {
       validateRequest: validateRequestInterceptor,
       mergeGlobalsRequest: mergeGlobalsRequestInterceptor,
-      mergeGlobalsRequest: mergeGlobalsRequestInterceptor,
+      buildUrlRequest: buildUrlRequestInterceptor,
       encodeJsonRequest: encodeJsonRequestInterceptor,
       parseJsonResponse: parseJsonResponseInterceptor
     }
