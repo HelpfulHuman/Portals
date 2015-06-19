@@ -1,6 +1,6 @@
 {
   "name": "portals",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "authors": [
     "Nick Glenn <nick@helpfulhuman.com>"
   ],
@@ -24,6 +24,8 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "gulpfile.js",
+    "LICENSE"
   ]
 }

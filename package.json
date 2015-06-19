@@ -1,6 +1,6 @@
 {
   "name": "portals",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An XHR/Ajax library with sugar for single page applications.",
   "main": "portals.js",
   "scripts": {
