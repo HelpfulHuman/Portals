@@ -183,10 +183,17 @@
 
     var promise = new Promise(function (resolve, reject) {
       xhr.onload = function (e) {
+
         var response = {
           status: this.status,
-          headers: this.responseHeaders || {},
-          body: this.responseText
+          headers: {
+            'Content-Type': this.getResponseHeader('Content-Type'),
+            'Cache-Control': this.getResponseHeader('Cache-Control'),
+            'Expires': this.getResponseHeader('Expires')
+          },
+          type: this.responseType,
+          body: this.responseText,
+          xhr: this
         };
 
         // loop through the response interceptors
@@ -207,8 +214,12 @@
       xhr.onerror = function () {
         reject({
           status: 0,
-          headers: {},
-          body: 'Connection Error'
+          headers: {
+            'Content-Type': 'text/plain'
+          },
+          type: 'error',
+          body: 'Connection Error',
+          xhr: this
         });
       };
 
