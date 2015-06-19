@@ -29,12 +29,14 @@ describe('Portal#send()', function () {
     var promise = web.send(opts);
 
     // set up the fake response
-    this.requests[0].respond(200, {}, data);
+    this.requests[0].respond(200, { Accept: 'application/json' }, data);
 
     // proceed with promise resolution
     promise.then(function (res) {
       expect(res.status).to.equal(200);
       expect(res.body).to.equal(data);
+      expect(res.headers).to.be.an('object');
+      expect(res.headers.Accept).to.equal('application/json');
       done();
     });
   });
@@ -42,18 +44,20 @@ describe('Portal#send()', function () {
   /**
    * @test
    */
-  it('sends a simple GET request with success', function (done) {
+  it('sends a simple GET request with failure', function (done) {
     var opts = { method: 'GET', url: '/' };
     var data = JSON.stringify({ foo: 'bar' });
     var promise = web.send(opts);
 
     // set up the fake response
-    this.requests[0].respond(402, {}, data);
+    this.requests[0].respond(402, { Accept: 'application/json' }, data);
 
     // proceed with promise resolution
     promise.catch(function (err) {
       expect(err.status).to.equal(402);
       expect(err.body).to.equal(data);
+      expect(err.headers).to.be.an('object');
+      expect(err.headers.Accept).to.equal('application/json');
       done();
     });
   });
