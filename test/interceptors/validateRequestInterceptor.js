@@ -30,4 +30,14 @@ describe('validateRequestInterceptor', function () {
     expect(result).to.equal(opts);
   });
 
+  /**
+   * @test
+   */
+  it('converts headers to an object if it\'s not an object', function () {
+    var opts = { method: 'GET', url: '/', headers: 'foo' };
+    var result = validateRequestInterceptor.call({}, opts);
+
+    expect(result).have.property('headers').that.is.an('object');
+  });
+
 });

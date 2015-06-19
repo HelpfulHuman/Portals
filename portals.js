@@ -60,6 +60,11 @@
       throw new Error('Invalid url provided');
     }
 
+    // ensure that "headers" is an object
+    if (typeof options.headers !== 'object') {
+      options.headers = {};
+    }
+
     return options
   }
 
@@ -86,9 +91,6 @@
     if (options.url.indexOf('http') !== 0) {
       options.url = (options.hostname || '') + options.url;
     }
-
-    // TODO replace parameters in URL
-    // TODO build query string from query object
 
     return options;
   }
