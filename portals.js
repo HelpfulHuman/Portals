@@ -201,7 +201,17 @@
 
         if (this.status === 200) resolve(response);
         else reject(response);
-      }
+      };
+
+      // send connection errors to catch()
+      xhr.onerror = function () {
+        reject({
+          status: 0,
+          headers: {},
+          body: 'Connection Error'
+        });
+      };
+
     });
 
     // add the headers to the request
