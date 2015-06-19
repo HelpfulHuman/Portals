@@ -116,8 +116,6 @@
    * @return {Object}
    */
   var parseJsonResponseInterceptor = function (response) {
-    response.headers = response.headers || {};
-
     if (response.headers['Content-Type']
         && response.headers['Content-Type'].indexOf('json') !== -1) {
       response.body = JSON.parse(response.body);
@@ -180,7 +178,7 @@
         if (xhr.readyState === 4) {
           var response = {
             status: this.status,
-            headers: this.responseHeaders,
+            headers: this.responseHeaders || {},
             body: this.responseText
           };
 
