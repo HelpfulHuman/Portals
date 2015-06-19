@@ -173,30 +173,34 @@
     var self = this;
     var xhr = new XMLHttpRequest();
 
+    if (!('withCredentials' in xhr)
+        && typeof XDomainRequest !== 'undefined') {
+      xhr = new XDomainRequest();
+    }
+
     xhr.open(opts.method.toUpperCase(), opts.url, true);
+    xhr.withCredentials = opts.withCredentials || false;
 
     var promise = new Promise(function (resolve, reject) {
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-          var response = {
-            status: this.status,
-            headers: this.responseHeaders || {},
-            body: this.responseText
-          };
+      xhr.onload = function (e) {
+        var response = {
+          status: this.status,
+          headers: this.responseHeaders || {},
+          body: this.responseText
+        };
 
-          // loop through the response interceptors
-          for (var i = 0; i < self._responseInterceptors.length; i++) {
-            response = self._responseInterceptors[i].call(self, response)
+        // loop through the response interceptors
+        for (var i = 0; i < self._responseInterceptors.length; i++) {
+          response = self._responseInterceptors[i].call(self, response)
 
-            // make sure that the options object is still an object
-            if (typeof response !== 'object') {
-              throw new Error('Response object is no longer an object after interception!');
-            }
+          // make sure that the options object is still an object
+          if (typeof response !== 'object') {
+            throw new Error('Response object is no longer an object after interception!');
           }
-
-          if (this.status === 200) resolve(response);
-          else reject(response);
         }
+
+        if (this.status === 200) resolve(response);
+        else reject(response);
       }
     });
 
