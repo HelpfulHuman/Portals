@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Portals by HelpfulHuman</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Portals</h1>
+      <h2 class="project-tagline">An XHR/Ajax library with sugar for single page applications.</h2>
+      <a href="https://github.com/HelpfulHuman/Portals" class="btn">View on GitHub</a>
+      <a href="https://github.com/HelpfulHuman/Portals/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/HelpfulHuman/Portals/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p>Portals is a library for making XHR/AJAX requests with some syntactic sugar.</p>
+
+<h2>
+<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting Started</h2>
+
+<h3>
+<a id="install-via-npm" class="anchor" href="#install-via-npm" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install via NPM</h3>
+
+<pre><code>npm install --save portals
+</code></pre>
+
+<p>And make sure to <code>require</code> it:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> portals <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>portals<span class="pl-pds">'</span></span>)</pre></div>
+
+<h3>
+<a id="install-via-bower" class="anchor" href="#install-via-bower" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install via Bower</h3>
+
+<pre><code>bower install --save portals
+</code></pre>
+
+<h2>
+<a id="create-an-instance" class="anchor" href="#create-an-instance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Create an Instance</h2>
+
+<p>Once installed, just instantiate an instance of the <code>Portal</code> constructor.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> http <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">portals.Portal</span>()</pre></div>
+
+<h2>
+<a id="sending-requests" class="anchor" href="#sending-requests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sending Requests</h2>
+
+<p>Sending requests isn't all that different from other libraries of this nature.  Simply supply a request object with url and method, along with any other request details you may need like a headers object, request body, etc...</p>
+
+<p>The <code>send()</code> method, and the helper methods, will return a standard promise with <code>then()</code> for successful (200 status code) responses and <code>catch()</code> for errors.</p>
+
+<div class="highlight highlight-javascript"><pre>http.<span class="pl-c1">send</span>({
+  method<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>GET<span class="pl-pds">'</span></span>,
+  url<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/some-endpoint<span class="pl-pds">'</span></span>,
+  headers<span class="pl-k">:</span> {
+    <span class="pl-s"><span class="pl-pds">'</span>Accept<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>application/json<span class="pl-pds">'</span></span>
+  }
+})
+.then(<span class="pl-k">function</span> (<span class="pl-smi">res</span>) {
+  <span class="pl-c">// do something with response</span>
+})</pre></div>
+
+<h3>
+<a id="helpers" class="anchor" href="#helpers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Helpers</h3>
+
+<p>Portals offers the typical helper methods for making method specific calls like <code>GET</code>, <code>POST</code>, <code>PUT</code> and <code>DELETE</code>.  These are basic shorthands and more advanced queries will want to make use of <code>send()</code>.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-c">// GET</span>
+http.get(<span class="pl-s"><span class="pl-pds">'</span>/posts<span class="pl-pds">'</span></span>)
+
+<span class="pl-c">// POST</span>
+http.post(<span class="pl-s"><span class="pl-pds">'</span>/posts<span class="pl-pds">'</span></span>, { id<span class="pl-k">:</span> <span class="pl-c1">1</span>, name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>example<span class="pl-pds">'</span></span> })
+
+<span class="pl-c">// PUT</span>
+http.put(<span class="pl-s"><span class="pl-pds">'</span>/posts/1<span class="pl-pds">'</span></span>, { name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>changed example<span class="pl-pds">'</span></span> })
+
+<span class="pl-c">// DELETE</span>
+http.del(<span class="pl-s"><span class="pl-pds">'</span>/posts/1<span class="pl-pds">'</span></span>)</pre></div>
+
+<h2>
+<a id="interceptors" class="anchor" href="#interceptors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Interceptors</h2>
+
+<p>Portals is made extensible via "interceptors".  These are simply functions that have the capability to modify request and response data.  Portals ships with a few standard interceptors that you can optionally use by calling the method <code>useDefaultInterceptors()</code>.</p>
+
+<div class="highlight highlight-javascript"><pre>http.useDefaultInterceptors()</pre></div>
+
+<p>If you want to cherry pick from the default interceptors, you can find them on the <code>interceptors</code> property and add them with the methods below.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> http <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">portals.Portal</span>()
+<span class="pl-k">var</span> encodeJsonRequestInterceptor <span class="pl-k">=</span> portals.interceptors.encodeJsonRequest
+
+http.onRequest(encodeJsonRequestInterceptor)</pre></div>
+
+<h3>
+<a id="adding-interceptors" class="anchor" href="#adding-interceptors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Adding Interceptors</h3>
+
+<p>You can add your own interceptors using either the <code>onRequest()</code> or the <code>onResponse()</code> methods.</p>
+
+<p>The <code>onRequest()</code> method adds a function that will be run when a request is about to go.  It receives the <code>options</code> object for the request which contains information like method, url, headers, etc...  Interceptors must return an object with strings for <code>method</code> and <code>url</code>.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> http <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">portals.Portal</span>()
+
+http.onRequest(<span class="pl-k">function</span> (<span class="pl-smi">config</span>) {
+  <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">'</span>logging: <span class="pl-pds">'</span></span>, config.url)
+
+  <span class="pl-k">return</span> config
+})
+
+http.get(<span class="pl-s"><span class="pl-pds">'</span>/my-endpoint<span class="pl-pds">'</span></span>)
+<span class="pl-c">// will print "logging: /my-endpoint"</span></pre></div>
+
+<p>The response interceptor is almost identical to the request interceptor, accept instead of an <code>options</code> object it receives and returns the <code>response</code> object for the completed request.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> http <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">portals.Portal</span>()
+
+http.onResponse(<span class="pl-k">function</span> (<span class="pl-smi">res</span>) {
+  res.<span class="pl-c1">body</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>intercepted!!!<span class="pl-pds">'</span></span>
+
+  <span class="pl-k">return</span> res
+})
+
+http.get(<span class="pl-s"><span class="pl-pds">'</span>/my-endpoint<span class="pl-pds">'</span></span>)
+<span class="pl-c">// response body will be "intercepted!!!"</span></pre></div>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<p>All features are just interceptors that come with the library.  These are available on the <code>interceptors</code> property and are automatically added when <code>useDefaultInterceptors()</code> is called.</p>
+
+<h3>
+<a id="globals" class="anchor" href="#globals" aria-hidden="true"><span class="octicon octicon-link"></span></a>Globals</h3>
+
+<p>Often times you may need to set a global value, like a set of headers or default hostname for your request URLs.  This is where using globals and the <code>mergeGlobalsRequest</code> interceptor comes in handy.</p>
+
+<div class="highlight highlight-javascript"><pre>http.globals.<span class="pl-c1">hostname</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>http://some-api.com<span class="pl-pds">'</span></span>
+http.globals.<span class="pl-c1">headers</span>.Accept <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>application/yml<span class="pl-pds">'</span></span>
+
+http.get(<span class="pl-s"><span class="pl-pds">'</span>/my-endpoint<span class="pl-pds">'</span></span>)
+<span class="pl-c">// will call "http://some-api.com/my-endpoint"</span></pre></div>
+
+<h5>
+<a id="standalone-usage" class="anchor" href="#standalone-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Standalone Usage</h5>
+
+<div class="highlight highlight-javascript"><pre>http.onRequest( portals.interceptors.mergeGlobalsRequest )</pre></div>
+
+<h3>
+<a id="concatenate-hostname-and-url" class="anchor" href="#concatenate-hostname-and-url" aria-hidden="true"><span class="octicon octicon-link"></span></a>Concatenate Hostname and Url</h3>
+
+<p>Concatenates the <code>hostname</code> and <code>url</code> for the request if "http" is not present in the URL.  </p>
+
+<h5>
+<a id="standalone-usage-1" class="anchor" href="#standalone-usage-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Standalone Usage</h5>
+
+<div class="highlight highlight-javascript"><pre>http.onRequest( portals.interceptors.buildUrlRequest )</pre></div>
+
+<h3>
+<a id="planned-url-parameter-customization" class="anchor" href="#planned-url-parameter-customization" aria-hidden="true"><span class="octicon octicon-link"></span></a>[PLANNED] URL Parameter Customization</h3>
+
+<p><em>Note: This interceptor has yet to be built.</em></p>
+
+<p>Allow tokens to be added to the url string and have those tokens replaced with matching key values from a "params" object.</p>
+
+<p><strong>Example:</strong></p>
+
+<div class="highlight highlight-javascript"><pre>http.<span class="pl-c1">send</span>({
+  method<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>GET<span class="pl-pds">'</span></span>,
+  url<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/posts/:postId<span class="pl-pds">'</span></span>,
+  params<span class="pl-k">:</span> {
+    postId<span class="pl-k">:</span> <span class="pl-c1">100</span>
+  }
+})
+
+<span class="pl-c">// hits "/posts/100"</span></pre></div>
+
+<h5>
+<a id="standalone-usage-2" class="anchor" href="#standalone-usage-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Standalone Usage</h5>
+
+<div class="highlight highlight-javascript"><pre>http.onRequest( portals.interceptors.parseUrlParamsRequest )</pre></div>
+
+<h3>
+<a id="planned-query-string-configuration" class="anchor" href="#planned-query-string-configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>[PLANNED] Query String Configuration</h3>
+
+<p><em>Note: This interceptor has yet to be built.</em></p>
+
+<p>Builds a query string out of a "query" object.</p>
+
+<p><strong>Example:</strong></p>
+
+<div class="highlight highlight-javascript"><pre>http.<span class="pl-c1">send</span>({
+  method<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>GET<span class="pl-pds">'</span></span>,
+  url<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/posts<span class="pl-pds">'</span></span>,
+  query<span class="pl-k">:</span> {
+    page<span class="pl-k">:</span> <span class="pl-c1">20</span>
+  }
+})
+
+<span class="pl-c">// hits "/posts?page=20"</span></pre></div>
+
+<h5>
+<a id="standalone-usage-3" class="anchor" href="#standalone-usage-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>Standalone Usage</h5>
+
+<div class="highlight highlight-javascript"><pre>http.onRequest( portals.interceptors.buildQueryRequest )</pre></div>
+
+<h3>
+<a id="encode-json-request-body" class="anchor" href="#encode-json-request-body" aria-hidden="true"><span class="octicon octicon-link"></span></a>Encode JSON Request Body</h3>
+
+<p>Encodes a <code>data</code> or <code>body</code> object as JSON if the <code>Content-Type</code> header contains <code>"json"</code> and sets it as the request body.</p>
+
+<h5>
+<a id="standalone-usage-4" class="anchor" href="#standalone-usage-4" aria-hidden="true"><span class="octicon octicon-link"></span></a>Standalone Usage</h5>
+
+<div class="highlight highlight-javascript"><pre>http.onRequest( portals.interceptors.encodeJsonRequest )</pre></div>
+
+<h3>
+<a id="parse-json-response-body" class="anchor" href="#parse-json-response-body" aria-hidden="true"><span class="octicon octicon-link"></span></a>Parse JSON Response Body</h3>
+
+<p>Parses the <code>body</code> of the response if the <code>Content-Type</code> header contains <code>"json"</code>.</p>
+
+<h5>
+<a id="standalone-usage-5" class="anchor" href="#standalone-usage-5" aria-hidden="true"><span class="octicon octicon-link"></span></a>Standalone Usage</h5>
+
+<div class="highlight highlight-javascript"><pre>http.onRequest( portals.interceptors.parseJsonResponse )</pre></div>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/HelpfulHuman/Portals">Portals</a> is maintained by <a href="https://github.com/HelpfulHuman">HelpfulHuman</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
