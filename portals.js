@@ -102,7 +102,7 @@
    * @return {Object}
    */
   var encodeJsonRequestInterceptor = function (options) {
-    if (options.data
+    if ((options.data || options.body)
         && typeof options.headers['Content-Type'] === 'string'
         && options.headers['Content-Type'].indexOf('json') !== -1) {
       options.body = JSON.stringify(options.data || options.body);
@@ -209,7 +209,12 @@
       xhr.setRequestHeader(key, opts.headers[key]);
     }
 
-    xhr.send(opts.data || opts.body || null);
+    // ensure that body is a string
+    if (opts.body && typeof opts.body !== 'string') {
+      opts.body = JSON.stringify(opts.body);
+    }
+
+    xhr.send(opts.body || null);
 
     return promise;
   }
