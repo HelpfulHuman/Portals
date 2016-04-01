@@ -144,6 +144,8 @@
     ];
 
     this._responseInterceptors = [];
+
+    this._catchInterceptors = [];
   }
 
   /**
@@ -212,6 +214,7 @@
 
       // send connection errors to catch()
       xhr.onerror = function () {
+
         reject({
           status: 0,
           headers: {
@@ -221,6 +224,12 @@
           body: 'Connection Error',
           xhr: this
         });
+
+        // loop through the catch interceptors
+        for (var i = 0; i < self._catchInterceptors.length; i++) {
+          self._catchInterceptors[i](opts);
+          console.log(opts);
+        }
       };
 
     });
@@ -344,6 +353,24 @@
 
     return this;
   }
+
+    /**
+     * Add new catch interceptor.
+     *
+     * @param  {Function} fn
+     * @return {this}
+     */
+    Portal.prototype.onCatch = function (fn) {
+      // ensure that interceptor is function
+      if (typeof fn !== 'function') {
+        throw new Error('Interceptor must be a function!');
+      }
+
+      // add the interceptor to the list
+      this._catchInterceptors.push(fn);
+      
+      return this;
+    }
 
   /**
    * Factory method that creates a new Portal instance with the
