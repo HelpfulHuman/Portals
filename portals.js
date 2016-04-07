@@ -102,7 +102,7 @@
    * @return {Object}
    */
   var encodeJsonRequestInterceptor = function (opts) {
-    const body = opts.body || opts.data
+    var body = opts.body || opts.data
     if (typeof body === 'object' && ! opts.dontEncodeJson) {
       opts.headers['Content-Type'] === 'application/json';
       opts.body = JSON.stringify(body);
