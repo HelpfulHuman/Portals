@@ -101,14 +101,13 @@
    * @param  {Object} options
    * @return {Object}
    */
-  var encodeJsonRequestInterceptor = function (options) {
-    if ((options.data || options.body)
-        && typeof options.headers['Content-Type'] === 'string'
-        && options.headers['Content-Type'].indexOf('json') !== -1) {
-      options.body = JSON.stringify(options.data || options.body);
+  var encodeJsonRequestInterceptor = function (opts) {
+    var body = opts.body || opts.data
+    if (typeof body === 'object' && ! opts.dontEncodeJson) {
+      opts.headers['Content-Type'] === 'application/json';
+      opts.body = JSON.stringify(body);
     }
-
-    return options;
+    return opts;
   }
 
   /**
@@ -368,7 +367,7 @@
 
       // add the interceptor to the list
       this._catchInterceptors.push(fn);
-      
+
       return this;
     }
 
