@@ -10,9 +10,24 @@ describe('mergeGlobalsRequestInterceptor', function () {
     var opts = { method: 'POST', url: '/foo' };
     var res  = mergeGlobalsRequestInterceptor.call(req, opts);
 
-    expect(res.method).to.equal(opts.method);
-    expect(res.url).to.equal(opts.url);
-    expect(res.body).to.equal(req.globals.body);
+    expect(res).to.deep.equal({
+      method: opts.method,
+      url: opts.url,
+      body: req.globals.body
+    });
+  });
+
+  /**
+   * @test
+   */
+  it('does not convert arrays to objects with string indexes', function () {
+    var req  = { globals: { arr: ['a','b','c'] }};
+    var opts = { arr: ['c', 'd', 'e', 'f'] };
+    var res  = mergeGlobalsRequestInterceptor.call(req, opts);
+
+    expect(res).to.deep.equal({
+      arr: opts.arr
+    });
   });
 
   /**
@@ -23,8 +38,12 @@ describe('mergeGlobalsRequestInterceptor', function () {
     var opts = { headers: { Authorization: 'Bearer xxxx' }};
     var res  = mergeGlobalsRequestInterceptor.call(req, opts);
 
-    expect(res.headers.Accept).to.equal(req.globals.headers.Accept);
-    expect(res.headers.Authorization).to.equal(opts.headers.Authorization);
+    expect(res).to.deep.equal({
+      headers: {
+        Accept: req.globals.headers.Accept,
+        Authorization: opts.headers.Authorization
+      }
+    });
   });
 
 });
