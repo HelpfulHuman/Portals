@@ -29,7 +29,7 @@
 
       for (var key in obj) {
         if (obj.hasOwnProperty(key)) {
-          if (typeof obj[key] === 'object') {
+          if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
             out[key] = out[key] || {};
             deepExtend(out[key], obj[key]);
           }
