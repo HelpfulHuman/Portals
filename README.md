@@ -8,9 +8,7 @@ The goals of this project are as follows:
 
 * Highly extensible
 * Shared options between requests
-* Supports promises (and uses ES6 promises when available)
-* Smallest file size possible (under 4kb minified desired)
-* As few dependencies as possible
+* Small footprint with no library dependencies
 
 ## Getting Started
 
