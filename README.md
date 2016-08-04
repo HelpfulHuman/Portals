@@ -26,12 +26,6 @@ And make sure to `require` it:
 var portals = require('portals')
 ```
 
-### Install via Bower
-
-```
-bower install --save portals
-```
-
 ## Create an Instance
 
 Once installed, just instantiate an instance of the `Portal` constructor.
