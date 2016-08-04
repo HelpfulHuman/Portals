@@ -1,2 +1,3 @@
+--compilers js:buble/register
 --recursive
 --reporter spec
