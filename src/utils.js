@@ -145,8 +145,8 @@ export function validateRequest (req) {
   }
 
   // ensure that "headers" is an object
-  if (typeof req.headers !== 'object') {
-    req.headers = {};
+  if (typeof req.headers !== 'object' || Array.isArray(req.headers)) {
+    throw new Error('Invalid headers object provided');
   }
 
   return req;
