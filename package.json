@@ -40,7 +40,8 @@
     "rollup": "^0.34.3",
     "rollup-plugin-buble": "^0.12.1",
     "rollup-watch": "^2.5.0",
-    "sinon": "^1.17.3"
+    "sinon": "^1.17.3",
+    "sinon-chai": "^2.8.0"
   },
   "dependencies": {}
 }
