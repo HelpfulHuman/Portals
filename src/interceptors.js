@@ -18,8 +18,7 @@ export function mergeGlobals (globals) {
     hostname: '',
     method: 'GET',
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      Accept: 'application/json'
     }
   }, globals);
 
@@ -122,13 +121,20 @@ export function checkStatus (allowed = []) {
  * @return {Object}
  */
 export function assumeContentType (req) {
-  let type;
-  // if the body is an instance of FormData, set type to multipart
-  if (req.body instanceof FormData) type = 'multipart/form-data';
-  // if the body starts with < assume XML
-  else if (req.body.indexOf('<') === 0) type = 'application/xml';
-  // re-assign the Content-Type header
-  if (type) req.headers['Content-Type'] = type;
-  // return the modified request object
+  // skip this if the header is explicitly set
+  if ( ! req.headers['Content-Type']) {
+    let type;
+    // if the body is an instance of FormData, set type to multipart
+    if (req.body instanceof FormData) type = 'multipart/form-data';
+    // if the body starts with < assume XML
+    else if (
+      typeof req.body === 'string' && req.body.indexOf('<') === 0
+    ) type = 'application/xml';
+    // if the body is an object literal, set type to json
+    else if (typeof req.body === 'object') type = 'application/json';
+    // re-assign the Content-Type header
+    if (type) req.headers['Content-Type'] = type;
+  }
+
   return req;
 }

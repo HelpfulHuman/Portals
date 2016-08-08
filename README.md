@@ -33,7 +33,7 @@ const http = createPortal({
 
 Name | Type | Description
 -----|------|------------
-`globals` | `Object` | An object containing a default request template that will be applied to each outgoing request.
+`globals` | `Object` | An object containing a default request template that will be used as the basis to each outgoing request.
 `json` | `Boolean` | Defaults to `true`.  Enables interceptors for encoding and parsing JSON requests and responses respectively.
 `queries` | `Boolean` | Defaults to `true`.  Enables automatic query string building using a `query` object for outgoing requests.
 `params` | `Boolean` | Defaults to `true`.  Enables URL tokens to be replaced with matching values in a `params` object for outgoing requests.
@@ -62,7 +62,7 @@ http.send({
 
 Portals offers the typical helper methods for making method specific calls like `GET`, `POST`, `PUT` and `DELETE`.  These return the same result as `send()`.  
 
-> **Note:** These examples assume that the `queries` and `params` settings are enabled.
+> **Note:** These examples show possible ways you can use these helpers and assume that the `queries` and `params` settings are enabled.
 
 ```javascript
 // GET /reports?order=asc
@@ -74,8 +74,8 @@ http.post('/articles', { subject: 'Hello World' })
 // PUT /users/93
 http.put('/users/{id}', { name: 'Johnny 5' }, { params: { id: 93 } })
 
-// DELETE
-http.delete('/users/23');
+// DELETE /tags/example
+http.delete('/tags/example');
 ```
 
 ## Interceptors
@@ -90,11 +90,11 @@ import { interceptors } from 'portals';
 
 ### Adding Interceptors
 
-You can add your own interceptors using either the `onRequest()` or the `onResponse()` methods.  Interceptors are expected to pipe modified input to the next interceptor in the chain, allowing modification in a linear fashion.  
+You can add your own interceptors using either the `onRequest()` or `onResponse()` methods.  Interceptors are expected to pipe modified input to the next interceptor in the chain, allowing modification in a linear fashion.  
 
-Interceptors added to a `Portal` instance and are applied to _all_ requests made by that instance.  Be sure to take this into account when adding new interceptors.
+Interceptors are added to a `Portal` instance and are applied to _all_ requests made by that instance.  Be sure to take this into account when creating and adding interceptors.
 
-> **Note:** Interceptors will also receive the XHR object for the request as their second argument.  Though it is discouraged to modify the XHR object directly unless absolutely necessary!
+> **Note:** Interceptors will also receive the XHR object for the request as their second argument.  However, it is discouraged to modify the XHR object directly unless absolutely necessary!
 
 ### Request Interceptors
 
@@ -113,7 +113,7 @@ http.get('/my-endpoint'); // "logging: /my-endpoint"
 
 ### Response Interceptors
 
-The response interceptor is almost identical to the request interceptor, except instead of a request object it receives and returns the "response" object (often called `req`) for the completed request.
+The response interceptor is almost identical to the request interceptor, except instead it receives and returns a "response" object (often called `req`) for the completed request.
 
 ```javascript
 var http = createPortal();
@@ -130,7 +130,7 @@ http.get('/my-endpoint').then(function (res) {
 
 ### Async Interceptors
 
-Interceptors can also be asynchronous if needed by returning a `Promise`.
+Interceptors can also be asynchronous if necessary by returning a `Promise`.
 
 ```javascript
 http.onRequest(function (req) {
@@ -144,7 +144,7 @@ http.onRequest(function (req) {
 
 ## Error Handlers
 
-Similarly to interceptors, there are error handlers for when things go wrong.  Whenever an error occurs during a request, all error handlers will be run before the subscribed `.catch()` function is invoked.
+Similarly to interceptors, there are error handlers for when things go wrong.  Whenever an error occurs during a request, all error handlers will be called with the error before the subscribed `.catch()` function is invoked.
 
 ```javascript
 const http = createPortal();
