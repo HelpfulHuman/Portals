@@ -4,5 +4,8 @@ export default {
   entry: 'src/index.js',
   format: 'cjs',
   plugins: [ buble() ],
-  dest: 'dist/index.js'
+  targets: [
+    { dest: 'dist/portals-cjs.js', format: 'cjs' },
+    { dest: 'dist/portals-es.js', format: 'es' }
+  ]
 };
