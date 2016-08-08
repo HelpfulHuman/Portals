@@ -8,13 +8,13 @@
     "preversion": "npm test",
     "version": "npm run build",
     "postversion": "git push origin master && git push origin master --tags",
-    "clean": "rm -rf dist/",
+    "prebuild": "rm -rf dist/",
     "build": "rollup -c",
     "watch": "npm run build -- --watch",
+    "pretest": "npm run build",
     "test": "mocha",
     "tdd": "npm run watch | npm run test -- --watch",
-    "prepublish": "npm run clean && npm run build && npm run test",
-    "postinstall":  "npm run build"
+    "prepublish": "npm run test"
   },
   "repository": {
     "type": "git",
