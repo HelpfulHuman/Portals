@@ -16,14 +16,22 @@ const isJson = /json/i;
 export function mergeGlobals (globals) {
   globals = Object.assign({
     hostname: '',
-    method: 'GET',
     headers: {
       Accept: 'application/json'
     }
   }, globals);
 
   return function (req) {
-    return Object.assign({}, globals, req);
+    const headers = (
+      typeof req.headers !== 'object' ?
+      Object.assign({}, globals.headers, req.headers) :
+      globals.headers
+    );
+
+    req = Object.assign({}, globals, req);
+    req.headers = headers;
+
+    return req;
   }
 }
 
