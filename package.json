@@ -1,9 +1,9 @@
 {
   "name": "portals",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An XHR/Ajax library with sugar for single page applications.",
-  "main": "dist/index.js",
-  "jsnext:main": "src/index.js",
+  "main": "dist/portals-cjs.js",
+  "jsnext:main": "dist/portals-es.js",
   "scripts": {
     "preversion": "npm test",
     "version": "npm run build",
