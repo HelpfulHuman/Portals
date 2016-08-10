@@ -129,8 +129,6 @@ export function checkStatus (allowed = []) {
  * @return {Object}
  */
 export function assumeContentType (req) {
-  // ensure that we have headers object for req
-  if ( ! req.headers) req.headers = {};
   // skip this if the header is explicitly set
   if ( ! req.headers['Content-Type']) {
     let type;
