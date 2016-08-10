@@ -37,8 +37,8 @@ export function createRequestObject () {
  */
 export function sendRequest (xhr, req, onReq = [], onRes = [], onErr = []) {
   return Promise.resolve(req)
-  .then(applyInterceptors.bind(null, onReq, xhr))
   .then(validateRequest)
+  .then(applyInterceptors.bind(null, onReq, xhr))
   .then(sendRequestObject.bind(null, xhr))
   .then(formatResponse)
   .then(applyInterceptors.bind(null, onRes, xhr))
