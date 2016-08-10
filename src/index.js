@@ -35,9 +35,7 @@ export function createPortal (opts = {}) {
   const portal = new _Portal();
 
   // add globals interceptor if any globals are set
-  if (opts.globals && typeof opts.globals !== 'object') {
-    portal.onRequest(_int.mergeGlobals(opts.globals));
-  }
+  portal.onRequest(_int.mergeGlobals(opts.globals));
 
   // attempt to resolve Content-Types when enabled
   if (opts.resolveTypes) {

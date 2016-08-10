@@ -18,13 +18,12 @@ describe('utils/validateRequest', function () {
     expect(() => validateRequest({ method, url: [] })).to.throw(err);
   });
 
-  it('throws an error if an invalid header object is given for the request', function () {
+  it('replaces the headers property with an empty object if an invalid object is given', function () {
     const method = 'GET';
     const url = '/foo';
-    const err = 'Invalid headers object provided';
-    expect(() => validateRequest({ method, url })).to.throw(err);
-    expect(() => validateRequest({ method, url, headers: [] })).to.throw(err);
-    expect(() => validateRequest({ method, url, headers: '{}' })).to.throw(err);
+    expect(validateRequest({ method, url })).to.have.property('headers').that.deep.equals({});
+    expect(validateRequest({ method, url, headers: [] })).to.have.property('headers').that.deep.equals({});
+    expect(validateRequest({ method, url, headers: '{}' })).to.have.property('headers').that.deep.equals({});
   });
 
   it('returns the same request object it was called with if method, url and header are all valid', function () {

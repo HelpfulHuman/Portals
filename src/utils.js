@@ -37,8 +37,8 @@ export function createRequestObject () {
  */
 export function sendRequest (xhr, req, onReq = [], onRes = [], onErr = []) {
   return Promise.resolve(req)
-  .then(applyInterceptors.bind(null, onReq, xhr))
   .then(validateRequest)
+  .then(applyInterceptors.bind(null, onReq, xhr))
   .then(sendRequestObject.bind(null, xhr))
   .then(formatResponse)
   .then(applyInterceptors.bind(null, onRes, xhr))
@@ -146,7 +146,7 @@ export function validateRequest (req) {
 
   // ensure that "headers" is an object
   if (typeof req.headers !== 'object' || Array.isArray(req.headers)) {
-    throw new Error('Invalid headers object provided');
+    req.headers = {};
   }
 
   return req;
