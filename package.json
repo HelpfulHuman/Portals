@@ -1,6 +1,6 @@
 {
   "name": "portals",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "An XHR/Ajax library with sugar for single page applications.",
   "main": "dist/portals-cjs.js",
   "jsnext:main": "dist/portals-es.js",
