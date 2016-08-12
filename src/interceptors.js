@@ -48,7 +48,7 @@ export function buildRequestUrl (enableQueries, enableParams) {
   return function (req) {
     // if "http" is not present in url, add the hostname
     if (req.url.indexOf('http') !== 0) {
-      req.url = (req.hostname + '/' + req.url).replace(/\/+/g, '/');
+      req.url = (req.hostname + '/' + req.url);//.replace(/\/+/g, '/');
     }
 
     // if params are present, switch out params with the values
