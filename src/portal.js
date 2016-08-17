@@ -89,19 +89,19 @@ export default class Portal {
    */
 
   get (url, req = {}) {
-    this.send(Object.assign({}, req, { method: 'GET', url }));
+    return this.send(Object.assign({}, req, { method: 'GET', url }));
   }
 
   post (url, body, req = {}) {
-    this.send(Object.assign({}, req, { method: 'POST', url, body }));
+    return this.send(Object.assign({}, req, { method: 'POST', url, body }));
   }
 
   put (url, body, req = {}) {
-    this.send(Object.assign({}, req, { method: 'PUT', url, body }));
+    return this.send(Object.assign({}, req, { method: 'PUT', url, body }));
   }
 
   delete (url, req = {}) {
-    this.send(Object.assign({}, req, { method: 'DELETE', url }));
+    return this.send(Object.assign({}, req, { method: 'DELETE', url }));
   }
 
 }
