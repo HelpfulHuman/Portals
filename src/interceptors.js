@@ -23,7 +23,7 @@ export function mergeGlobals (globals) {
 
   return function (req) {
     const headers = (
-      typeof req.headers !== 'object' ?
+      typeof req.headers === 'object' ?
       Object.assign({}, globals.headers, req.headers) :
       globals.headers
     );
