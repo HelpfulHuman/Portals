@@ -1,4 +1,4 @@
 node_modules/
 dist/
-_legacy/
-npm-debug.log
+.rpt2_cache/
+*.log

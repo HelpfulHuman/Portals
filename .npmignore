@@ -1,2 +1,6 @@
-_legacy/
 src/
+test/
+.rpt2_cache/
+logo.png
+rollup.config.js
+tsconfig.json

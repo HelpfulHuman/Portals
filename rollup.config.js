@@ -1,11 +1,11 @@
-import buble from 'rollup-plugin-buble';
+import typescript from "rollup-plugin-typescript2";
 
 export default {
-  entry: 'src/index.js',
-  format: 'cjs',
-  plugins: [ buble() ],
-  targets: [
-    { dest: 'dist/portals-cjs.js', format: 'cjs' },
-    { dest: 'dist/portals-es.js', format: 'es' }
-  ]
+  input: "src/index.ts",
+  output: [
+    { file: "dist/index.js", format: "cjs" },
+    { file: "dist/index.es.js", format: "es" },
+  ],
+  exports: "named",
+  plugins: [ typescript() ],
 };
