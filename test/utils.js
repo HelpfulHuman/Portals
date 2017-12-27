@@ -1,4 +1,4 @@
-const { stub } = require('sinon');
+const { stub } = require("sinon");
 
 function noop () {}
 
