@@ -1,6 +1,6 @@
 import {Request, Response, Middleware} from "./";
 
-export type EncodeJSON = { json: boolean; };
+export type EncodeJSON = { json?: boolean; };
 
 /**
  * Encode and parse JSON requests and responses.

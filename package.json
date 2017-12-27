@@ -12,9 +12,8 @@
     "prebuild": "rm -rf dist/",
     "build": "rollup -c",
     "watch": "npm run build -- --watch",
-    "pretest": "npm run build",
-    "test": "mocha",
-    "tdd": "npm run watch | npm run test -- --watch",
+    "test": "jest",
+    "tdd": "jest --watch",
     "prepublish": "npm run test"
   },
   "repository": {
@@ -38,14 +37,27 @@
   },
   "homepage": "https://github.com/HelpfulHuman/Portals",
   "devDependencies": {
-    "chai": "^3.5.0",
-    "mocha": "^3.0.1",
+    "@types/jest": "^21.1.9",
+    "jest": "^22.0.4",
     "rollup": "^0.53.0",
     "rollup-plugin-typescript2": "^0.9.0",
     "rollup-watch": "^4.3.1",
-    "sinon": "^1.17.3",
-    "sinon-chai": "^2.8.0",
+    "ts-jest": "^22.0.0",
     "typescript": "^2.6.2"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "\\.test\\.tsx?$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
 }
