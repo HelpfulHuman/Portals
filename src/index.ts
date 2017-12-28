@@ -1,6 +1,6 @@
 export interface Request {
   url: string;
-  method?: "GET"|"POST"|"PUT"|"PATCH"|"DELETE"|"HEAD";
+  method?: Method;
   headers?: object;
   body?: any;
   cors?: boolean;
@@ -16,6 +16,16 @@ export interface Response {
 
 export interface NextFunction<Response> {
   (): Promise<Response>;
+}
+
+export enum Method {
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  PATCH = "PATCH",
+  DELETE = "DELETE",
+  HEAD = "HEAD",
+  UPDATE = "UPDATE",
 }
 
 export interface Middleware<Request, Response> {
