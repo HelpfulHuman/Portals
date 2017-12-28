@@ -52,9 +52,7 @@ export function send(request: Request): Promise<Response> {
     };
 
     // Generate a formatted object for the response
-    xhr.onreadystatechange = function () {
-      if (this.readyState !== 4) return;
-
+    xhr.onload = function () {
       accept({
         xhr: xhr,
         statusCode: xhr.status,
