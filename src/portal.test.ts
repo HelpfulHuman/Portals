@@ -53,10 +53,10 @@ describe("send()", () => {
     } };
     var res = await send(req as Request);
     expect(xhr.setRequestHeader.mock.calls.length).toEqual(2);
-    expect(xhr.setRequestHeader.mock.calls[0][0]).toEqual("Content-Type");
-    expect(xhr.setRequestHeader.mock.calls[0][1]).toEqual("multipart/form-data");
-    expect(xhr.setRequestHeader.mock.calls[1][0]).toEqual("Accept");
-    expect(xhr.setRequestHeader.mock.calls[1][1]).toEqual("application/json");
+    expect(xhr.setRequestHeader.mock.calls).toEqual([
+      ["Content-Type", "multipart/form-data"],
+      ["Accept", "application/json"],
+    ]);
   });
 
   it("sends the value of the body property on the request object", async () => {
