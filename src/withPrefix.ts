@@ -13,8 +13,10 @@ function applyHostnamePrefix(url: string, prefix: string) {
  */
 function applyResourcePrefix(url: string, prefix: string) {
   if (url.indexOf("http") === 0) {
-    // TODO: Take apart the URL and put it back together with the URI prefix
-    //       added to the URI only
+    var matches = url.match(/^(https?\:\/\/[^\/?#]+)(?:[\/?#]|$)/i);
+    var domain = matches && matches[1];
+
+    return (domain + prefix + url.replace(domain, ''));
   } else {
     return prefix + url;
   }
