@@ -55,7 +55,13 @@ describe("supportsJson()", () => {
     expect(req.body).toEqual(body);
   });
 
-  it("converts the request body value to a JSON string and sets the Content-Type to application/json when the json option is explicitly set to true");
+  it("converts the request body value to a JSON string and sets the Content-Type to application/json when the json option is explicitly set to true", async () => {
+    var body = { foo: "bar" };
+    var req = { url: "/", headers: {}, json: true, body };
+    await supportsJson()(req, mockNext("", ""));
+    expect(req.headers["Content-Type"]).toEqual("application/json");
+    expect(req.body).toEqual(JSON.stringify(body));
+  });
 
   it("does not parse the response body when the contentType is not a JSON mime-type", async () => {
     var resBody = JSON.stringify({ foo: "bar" });
