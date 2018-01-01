@@ -2,154 +2,129 @@
 
 [![Build Status](https://travis-ci.org/HelpfulHuman/Portals.svg?branch=master)](https://travis-ci.org/HelpfulHuman/Portals) [![Join the chat at https://gitter.im/HelpfulHuman/Portals](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/HelpfulHuman/Portals?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Portals is a library for making XHR/AJAX requests with some syntactic sugar.
-
-> **Note:** This library assumes you are working in an environment that supports `Object.keys`, `Object.assign` and `Promise`s.  If you are not then you will need to ensure that a polyfill is in place before using this library.
+Portals is a library for making XHR requests with middleware support.
 
 ## Getting Started
 
-First things first, you'll need to install the library using `npm`.
+Install the library with `npm`:
 
 ```
 npm install --save portals
 ```
 
-Once installed, you can import the `createPortal()` function to get up and running immediately.  This function is a factory that will set up a `Portal` instance with some default interceptors that offer baseline functionality for the most common of requests.
+Once installed, you can import the `createPortal()` function to get up and running immediately.  This function is a factory that will set up a new "portal" for creating HTTP requests.
 
-```javascript
-import { createPortal } from 'portals';
+```ts
+import {createPortal} from "portals";
 
-const http = createPortal({
-  globals: {
-    hostname: 'https://some-web-service.com',
-    headers: {
-      Authorization: 'Bearer S#Gwer6in456DFGhje#$5dfgsr5)Lgeryugh'
-    }
-  }
-});
-```
-
-### Options
-
-Name | Type | Description
------|------|------------
-`globals` | `Object` | An object containing a default request template that will be used as the basis to each outgoing request.
-`json` | `Boolean` | Defaults to `true`.  Enables interceptors for encoding and parsing JSON requests and responses respectively.
-`queries` | `Boolean` | Defaults to `true`.  Enables automatic query string building using a `query` object for outgoing requests.
-`params` | `Boolean` | Defaults to `true`.  Enables URL tokens to be replaced with matching values in a `params` object for outgoing requests.
-`okStatuses` | `Number[]` | An array containing all the "OK" status codes.  Any status code not in this list will result an error.  You can optionally disable this feature entirely by setting it to `false`.  By default, all `200` and `300` status codes are allowed.
-`resolveTypes` | `Boolean` | Defaults to `true`.  Attempts to determine the appropriate `Content-Type` header for the request based on the body.
-
-## Sending Requests
-
-Sending requests isn't all that different from other libraries of this nature.  Simply supply a request object with url and method, along with any other request details you may need like a headers object, request body, etc...
-
-The `send()` method, and the helper methods, will return a standard promise with `then()` for successful responses and `catch()` for errors.
-
-```javascript
-http.send({
-  method: 'GET',
-  url: '/some-endpoint',
-  headers: {
-    Accept: 'application/json'
-  }
-}).then(function (res) {
-  // do something with response
-});
-```
-
-### Helpers
-
-Portals offers the typical helper methods for making method specific calls like `GET`, `POST`, `PUT` and `DELETE`.  These return the same result as `send()`.  
-
-> **Note:** These examples show possible ways you can use these helpers and assume that the `queries` and `params` settings are enabled.
-
-```javascript
-// GET /reports?order=asc
-http.get('/reports', { query: { order: 'asc' } })
-
-// POST /articles
-http.post('/articles', { subject: 'Hello World' })
-
-// PUT /users/93
-http.put('/users/{id}', { name: 'Johnny 5' }, { params: { id: 93 } })
-
-// DELETE /tags/example
-http.delete('/tags/example');
-```
-
-## Interceptors
-
-Portals is made extensible via "interceptors".  These are functions that have the capability to modify request and response data.  Portals ships with a few standard interceptors that are added for you based on the configuration that you pass to `createPortal()`.
-
-If you want to cherry pick from the default interceptors, you can find them on the `interceptors` property and add them with the methods that will be listed below.
-
-```javascript
-import { interceptors } from 'portals';
-```
-
-### Adding Interceptors
-
-You can add your own interceptors using either the `onRequest()` or `onResponse()` methods.  Interceptors are expected to pipe modified input to the next interceptor in the chain, allowing modification in a linear fashion.  
-
-Interceptors are added to a `Portal` instance and are applied to _all_ requests made by that instance.  Be sure to take this into account when creating and adding interceptors.
-
-> **Note:** Interceptors will also receive the XHR object for the request as their second argument.  However, it is discouraged to modify the XHR object directly unless absolutely necessary!
-
-### Request Interceptors
-
-The `onRequest()` method adds a function that will be run when a request is about to go.  It receives the request object (often called `req`), which contains information like method, url, headers, etc...  Interceptors must return an object with strings for `method` and `url`.
-
-```javascript
-var http = createPortal();
-
-http.onRequest(function (req) {
-  console.log('logging: ', req.url);
-  return req;
-});
-
-http.get('/my-endpoint'); // "logging: /my-endpoint"
-```
-
-### Response Interceptors
-
-The response interceptor is almost identical to the request interceptor, except instead it receives and returns a "response" object (often called `req`) for the completed request.
-
-```javascript
-var http = createPortal();
-
-http.onResponse(function (res) {
-  res.body = 'intercepted!!!';
-  return res;
-});
-
-http.get('/my-endpoint').then(function (res) {
-  console.log(res.body); // "intercepted!!!"
-});
-```
-
-### Async Interceptors
-
-Interceptors can also be asynchronous if necessary by returning a `Promise`.
-
-```javascript
-http.onRequest(function (req) {
-  return new Promise(function (accept, reject) {
-    setTimeout(function () {
-      accept(req);
-    }, 5000);
-  });
-});
-```
-
-## Error Handlers
-
-Similarly to interceptors, there are error handlers for when things go wrong.  Whenever an error occurs during a request, all error handlers will be called with the error before the subscribed `.catch()` function is invoked.
-
-```javascript
 const http = createPortal();
 
-http.onError(function (err, xhr) {
-  // do something due to an error
-});
+http({ url: "http://example.com/some/endpoint" }).then(res => ...)
+```
+
+The example above doesn't do much outside of creating an XHR request for you.  However, the usefulness of this library lies in its use of [middleware](#middleware).  The example below will stringify and parse JSON for the request and response data, prefix given URLs with the desired hostname and add the Authorization header with a Bearer token.
+
+> **Note:** Don't be afraid to have multiple portal functions for different use cases.  The returned function is incredibly simple and contains little overhead.
+
+```ts
+import {createPortal, supportsJson, withPrefix, withBearer} from "portals";
+
+const exampleApi = createPortal(
+  supportsJson(),
+  withPrefix("https://api.example.com")
+  withBearer(req => localStorage.getItem("apiToken"))
+);
+```
+
+### The Request Object
+
+The table below outlines the fields supported by all requests, regardless of middleware.
+
+Field | Type | Description
+------|------|------------
+**url** | `string` | The endpoint address that we'll making a request to.  **This field is required.**
+**method** | `string` | The HTTP method used for the request.  _Defaults to `"GET"`._
+**headers** | `object` | An object literal containing all of the HTTP headers for the request.  Automatically gets mapped to the XHR object for the request.
+**body** | `any` | The request body used by `POST`, `PUT` and `PATCH` requests.  By default, you should use `string` or `FormData` formats unless you have middleware in place to handle type conversions.
+**cors** | `boolean` | Sets the value of the `.withCredentials` property of the XHR instance for the request in order to allow Cross-Domain calls. _Defaults to `true`._
+
+### The Response Object
+
+The table below represents the object generated for a response before middleware is applied.
+
+Field | Type | Description
+------|------|------------
+**xhr** | `XMLHttpRequest` | The XHR instance used to perform the request.
+**statusCode** | `number` | The HTTP status code returned by the server.  Should be within the 200 - 299 for OK or accepted requests.
+**contentType** | `string` | The MIME type for the response provided by the `Content-Type` response header.
+**headers** | `object` | Response headers in a simplified object literal.
+**body** | `any` | The body of the response.
+
+### Error Handling
+
+Because every endpoint handles errors differently, the errors that are reported to your Promise's `.catch()` handler are only for fatal errors related to problems within your middleware or the XHR call itself.  Instead, you can check the status code on the response object that is returned.
+
+## Middleware
+
+The middleware system employed by this library is based on Promises and should feel familiar to people who have used libraries with similar patterns (like [Koa](https://koajs.com)).  Middleware in Portals is a function that accepts a `Request` object and a `next()` function that will invoke and return the result of the next middleware in the stack.  The result of `next()` will _always_ be a `Promise`.
+
+> **Note:** Portals supports native promises and can safely be used with the `async/await` keywords.
+
+```ts
+function myMiddleware(request, next) {
+  // do something with the request
+  return next().then(function(response) {
+    // do something with the response
+  });
+}
+```
+
+## Included Middleware
+
+### `supportsJson()`
+
+Encodes object literal `body` values into JSON requests and automatically parses JSON response bodies.
+
+### `withPrefix(prefix)`
+
+Prefix the request URL with either a full hostname or partial URI.
+
+```ts
+import {withPrefix} from "portals";
+
+// converts `/foo` to `/api/foo` and...
+// converts `http://example.com` to `http://example.com/api`
+withPrefix("/api")
+
+// converts `/foo` to `http://example.com/foo` but
+// leaves `http://somewhere.else.com/foo` alone
+withPrefix("http://example.com")
+```
+
+### `withHeader(name, value, override = false)`
+
+Add a header to your request, either as a default if none is provided or as a constant override.  The second argument, `value`, can also be a function that receives the `request` object.
+
+```ts
+import {withHeader} from "portals";
+
+// Default header
+withHeader("Content-Type", "application/json")
+
+// Constant override header
+withHeader("Content-Type", "application/json", true)
+
+// Dynamic header value
+withHeader("Content-Type", (req) => (req.body instanceof FormData ? "multipart/form-data" : "application/json"))
+```
+
+### `withBearer(getToken)`
+
+Passes the `request` object to the given `getToken` method to generate an Bearer token for the `Authorization` header.
+
+```ts
+import {withBearer} from "portals";
+
+withBearer(req => localStorage.getItem("apiToken"))
+// { headers: { Authorization: "Bearer ${apiToken}" } }
 ```
