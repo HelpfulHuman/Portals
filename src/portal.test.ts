@@ -90,17 +90,43 @@ describe("send()", () => {
 
 describe("createPortal()", () => {
 
-  it("sets defaults for method, headers and cors when only a URL is provided");
+  it("sets defaults for method, headers and cors when only a URL is provided", async () => {
+    var url = "/";
+    var mw = jest.fn((req, next) => {
+      expect(req).toEqual({
+        url: url,
+        method: "GET",
+        headers: { "Content-Type": "text/plain" },
+        cors: true,
+      });
+    });
+    var testPortal = createPortal(mw);
+    var res = await testPortal({ url });
+  });
 
-  it("immediately invokes the XHR instance's send method when no middleware are provided");
+  it("immediately invokes the XHR instance's send method when no middleware are provided", async () => {
+    var xhr = mockXHR({}, "helloworld");
+    var testPortal = createPortal();
+    var res = await testPortal({ url: "/test" });
+    expect(xhr.open.mock.calls[0]).toEqual(["GET", "/test", true]);
+    expect(xhr.send.mock.calls.length).toEqual(1);
+    expect(res.body).toEqual("helloworld");
+  });
 
   it("invokes the first middleware and then no more when the next() method is not invoked", async () => {
     var mw = jest.fn(req => null);
-    var send = createPortal(mw, mw);
-    var res = await send({ url: "" });
+    var testPortal = createPortal(mw, mw);
+    var res = await testPortal({ url: "" });
     expect(mw.mock.calls.length).toEqual(1);
   });
 
-  it("invokes each middleware until the next() method is no longer invoked");
+  it("invokes each middleware until the next() method is no longer invoked", async () => {
+    var mw = jest.fn((req, next) => next());
+    var endTest = jest.fn();
+    var testPortal = createPortal(mw, mw, mw, mw, endTest);
+    var res = await testPortal({ url: "" });
+    expect(mw.mock.calls.length).toEqual(4);
+    expect(endTest.mock.calls.length).toEqual(1);
+  });
 
 });
