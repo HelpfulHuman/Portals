@@ -46,7 +46,7 @@ Field | Type | Description
 **method** | `string` | The HTTP method used for the request.  _Defaults to `"GET"`._
 **headers** | `object` | An object literal containing all of the HTTP headers for the request.  Automatically gets mapped to the XHR object for the request.
 **body** | `any` | The request body used by `POST`, `PUT` and `PATCH` requests.  By default, you should use `string` or `FormData` formats unless you have middleware in place to handle type conversions.
-**cors** | `boolean` | Sets the value of the `.withCredentials` property of the XHR instance for the request in order to allow Cross-Domain calls. _Defaults to `true`._
+**withCredentials** | `boolean` | Sets the value of the `.withCredentials` property of the XHR instance for the request in order to allow secured cross-domain calls. _Defaults to `true`._
 
 ### The Response Object
 
