@@ -39,7 +39,7 @@ export function send(request: Request): Promise<Response> {
 
     // Open the request with the given configuration
     xhr.open(request.method, request.url, true);
-    xhr.withCredentials = request.cors;
+    xhr.withCredentials = request.withCredentials;
 
     // Add each header to the XHR request
     for (var k in request.headers) {
@@ -82,11 +82,17 @@ export function createPortal<Req extends Request = Request, Res extends Response
       request.body instanceof FormData ? "multipart/form-data" : "text/plain"
     );
 
+    // The "cors" option is being deprecated in favor of the more properly
+    // named "withCredentials"
+    if (request.cors) {
+      console.warn("DEPRECATION WARNING: Use `withCredentials` instead of `cors`.");
+    }
+
     // Create a new copy of our request object so middleware doesn't mutate
     // a given object
     request = {
       method: "GET",
-      cors: true,
+      withCredentials: (request.cors || false),
       headers: {
         "Content-Type": contentType,
       },

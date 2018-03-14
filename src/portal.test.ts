@@ -38,11 +38,11 @@ describe("send()", () => {
     expect(xhr.open.mock.calls[0][2]).toEqual(true);
   });
 
-  it("sets the withCredentials value to true when the cors option is set to true", async () => {
+  it("sets the withCredentials value to true when the withCredentials option is set to true", async () => {
     var xhr = mockXHR();
-    var req = { url: "", cors: true, method: "GET", headers: {} };
+    var req = { url: "", withCredentials: true, method: "GET", headers: {} };
     var res = await send(req as Request);
-    expect(xhr.withCredentials).toEqual(req.cors);
+    expect(xhr.withCredentials).toEqual(req.withCredentials);
   });
 
   it("sets the request headers using the key/value pairs in the given headers object literal", async () => {
@@ -90,14 +90,14 @@ describe("send()", () => {
 
 describe("createPortal()", () => {
 
-  it("sets defaults for method, headers and cors when only a URL is provided", async () => {
+  it("sets defaults for method, headers and withCredentials when only a URL is provided", async () => {
     var url = "/";
     var mw = jest.fn((req, next) => {
       expect(req).toEqual({
         url: url,
         method: "GET",
         headers: { "Content-Type": "text/plain" },
-        cors: true,
+        withCredentials: false,
       });
     });
     var testPortal = createPortal(mw);

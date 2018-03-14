@@ -4,6 +4,7 @@ export interface Request {
   headers?: object;
   body?: any;
   cors?: boolean;
+  withCredentials?: boolean;
 }
 
 export interface Response {
