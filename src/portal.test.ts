@@ -90,14 +90,14 @@ describe("send()", () => {
 
 describe("createPortal()", () => {
 
-  it("sets defaults for method, headers and cors when only a URL is provided", async () => {
+  it("sets defaults for method, headers and withCredentials when only a URL is provided", async () => {
     var url = "/";
     var mw = jest.fn((req, next) => {
       expect(req).toEqual({
         url: url,
         method: "GET",
         headers: { "Content-Type": "text/plain" },
-        cors: true,
+        withCredentials: false,
       });
     });
     var testPortal = createPortal(mw);
