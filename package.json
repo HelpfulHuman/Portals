@@ -11,7 +11,7 @@
     "postversion": "git push origin master && git push origin master --tags",
     "prebuild": "rm -rf dist/",
     "build": "rollup -c",
-    "watch": "npm run build -- --watch",
+    "watch": "rollup -cw",
     "test": "jest",
     "tdd": "jest --watch",
     "prepublish": "npm run test"
@@ -37,13 +37,13 @@
   },
   "homepage": "https://github.com/HelpfulHuman/Portals",
   "devDependencies": {
-    "@types/jest": "^21.1.9",
-    "jest": "^22.0.4",
-    "rollup": "^0.53.0",
+    "@types/jest": "^21.1.10",
+    "jest": "^22.4.4",
+    "rollup": "^0.53.4",
     "rollup-plugin-typescript2": "^0.9.0",
     "rollup-watch": "^4.3.1",
-    "ts-jest": "^22.0.0",
-    "typescript": "^2.6.2"
+    "ts-jest": "^22.4.6",
+    "typescript": "^2.9.2"
   },
   "dependencies": {},
   "jest": {
