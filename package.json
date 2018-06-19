@@ -1,6 +1,6 @@
 {
   "name": "portals",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Client-side HTTP requests with middleware support.",
   "main": "dist/index.js",
   "jsnext:main": "dist/index.es.js",
