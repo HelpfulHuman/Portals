@@ -56,8 +56,8 @@ export function send(request: Request): Promise<Response> {
     }
 
     // Reject on error
-    xhr.onerror = function (ev: ProgressEvent & { error: Error }) {
-      reject(ev.error);
+    xhr.onerror = function (ev: ProgressEvent | any) {
+      reject(ev.error || new Error("XHR request failed without reason."));
     };
 
     // Generate a formatted object for the response
