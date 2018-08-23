@@ -1,4 +1,4 @@
-import {Request, Response, Middleware} from "./";
+import { Request, Response, Middleware, HttpHeaderLiteral } from "./";
 
 export interface Portal<Request, Response> {
   (request: Request): Promise<Response>;
@@ -10,19 +10,21 @@ export interface Portal<Request, Response> {
  */
 export function getAllHeaders(xhr: XMLHttpRequest): object {
   // Read all headers into a string
-  var headers = xhr.getAllResponseHeaders();
+  let headers = xhr.getAllResponseHeaders();
 
   // Split the header components apart into an array
-  var arr = headers.trim().split(/[\r\n]+/);
+  let arr = headers.trim().split(/[\r\n]+/);
 
   // Map over all of the headers to create an object
-  var output = {};
-  arr.forEach(function (line) {
-    var parts = line.split(": ");
-    var header = parts.shift();
-    var value = parts.join(": ");
-    output[header] = value;
-  });
+  let output: HttpHeaderLiteral = {};
+  for (let line of arr) {
+    let parts = line.split(": ");
+    let header = parts.shift();
+    let value = parts.join(": ");
+    if (!!header) {
+      output[header] = value;
+    }
+  }
 
   // Return the object
   return output;
@@ -35,64 +37,72 @@ export function getAllHeaders(xhr: XMLHttpRequest): object {
 export function send(request: Request): Promise<Response> {
   return new Promise(function (accept, reject) {
     // Create the XHR object for the request
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
 
     // Open the request with the given configuration
     xhr.open(request.method, request.url, true);
-    xhr.withCredentials = request.withCredentials;
+    xhr.withCredentials = !!request.withCredentials;
 
     // Add each header to the XHR request
-    for (var k in request.headers) {
-      xhr.setRequestHeader(k, request.headers[k]);
+    if (typeof request.headers === "object") {
+      for (let k in request.headers) {
+        let value = request.headers[k];
+        xhr.setRequestHeader(k, (
+          Array.isArray(value) ?
+            value.join(", ") :
+            value
+        ));
+      }
     }
 
     // Reject on error
-    xhr.onerror = function (ev) {
+    xhr.onerror = function (ev: ProgressEvent & { error: Error }) {
       reject(ev.error);
     };
 
     // Generate a formatted object for the response
     xhr.onload = function () {
-      accept({
+      const res: Response = {
         xhr: xhr,
         statusCode: xhr.status,
         contentType: xhr.getResponseHeader("Content-Type"),
         headers: getAllHeaders(xhr),
         body: xhr.responseText,
-      });
-    }
+      };
+      accept(res);
+    };
 
     // Send the request
     xhr.send(request.body);
   });
-};
+}
 
 /**
  * Creates and returns a new "portal" instance for creating HTTP
  * requests.  Each request and response is passed through the
  * given middleware.
  */
-export function createPortal<Req extends Request = Request, Res extends Response = Response>(...middleware: Middleware<Req, Res>[]): Portal<Req, Res> {
+export function createPortal<
+  CustomRequestOptions extends object = any,
+  CustomResponseValues extends object = any
+  >(...middleware: Middleware<Request<any, CustomRequestOptions>, Response<any, CustomResponseValues>>[])
+  : Portal<Request<any, CustomRequestOptions>, Response<any, CustomResponseValues>> {
   // Add our send method as "middleware"
   middleware = middleware.concat(send as any);
 
-  return function(request) {
+  return function portal<ResponseBody = any, RequestBody = any>(
+    request: Request<RequestBody, CustomRequestOptions>,
+  ): Promise<Response<ResponseBody, CustomResponseValues>> {
     // If the request body is a FormData object, set our Content-Type header
-    var contentType = (
+    let contentType = (
       request.body instanceof FormData ? "multipart/form-data" : "text/plain"
     );
-
-    // The "cors" option is being deprecated in favor of the more properly
-    // named "withCredentials"
-    if (request.cors) {
-      console.warn("DEPRECATION WARNING: Use `withCredentials` instead of `cors`.");
-    }
 
     // Create a new copy of our request object so middleware doesn't mutate
     // a given object
     request = {
       method: "GET",
-      withCredentials: (request.cors || false),
+      withCredentials: false,
       headers: {
         "Content-Type": contentType,
       },
@@ -102,18 +112,18 @@ export function createPortal<Req extends Request = Request, Res extends Response
     // If the request body is a FormData object, then we automatically set
     // the Content-Type regardless of middleware
     if (request.body instanceof FormData) {
-      request.headers["Content-Type"] = "multipart/form-data";
+      request.headers!["Content-Type"] = "multipart/form-data";
     }
 
     // Track the last invoked middleware index
-    var lastIndex = -1;
+    let lastIndex = -1;
 
     // Next function invokes the next middleware in the stack (only once)
     function next(i: number) {
       // Warn and bail if a middleware is invoking its next() method multiple times
       if (lastIndex > i) {
         console.warn("Middleware fired its next() method more than once.");
-        return;
+        return Promise.reject(new Error("Middleware fired its next() method more than once."));
       }
 
       // Track the last index that will fire
@@ -121,12 +131,12 @@ export function createPortal<Req extends Request = Request, Res extends Response
 
       // Invoke the next middleware in the stack or report an error
       try {
-        var res = middleware[i](request, () => next(i + 1));
+        let res = middleware[i](request, () => next(i + 1));
         return Promise.resolve(res);
       } catch (err) {
         return Promise.reject(err);
       }
-    };
+    }
 
     return next(0);
   };

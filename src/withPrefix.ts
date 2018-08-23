@@ -1,4 +1,4 @@
-import {Request, Middleware} from "./";
+import { Request, Middleware } from "./";
 
 /**
  * Applies the hostname prefix to the URL unless the given
@@ -13,10 +13,10 @@ function applyHostnamePrefix(url: string, prefix: string) {
  */
 function applyResourcePrefix(url: string, prefix: string) {
   if (url.indexOf("http") === 0) {
-    var matches = url.match(/^(https?\:\/\/[^\/?#]+)(?:[\/?#]|$)/i);
-    var domain = matches && matches[1];
+    let matches = url.match(/^(https?\:\/\/[^\/?#]+)(?:[\/?#]|$)/i);
+    let domain = matches && matches[1];
 
-    return (domain + prefix + url.replace(domain, ''));
+    return (domain + prefix + url.replace(domain || "", ""));
   } else {
     return prefix + url;
   }
@@ -31,7 +31,7 @@ export function withPrefix(prefix: string): Middleware<Request, any> {
     prefix.indexOf("http") === 0 ? applyHostnamePrefix : applyResourcePrefix
   );
 
-  return function(request, next) {
+  return function (request, next) {
     request.url = applyPrefix(request.url, prefix);
     return next();
   };

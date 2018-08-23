@@ -1,23 +1,26 @@
-export interface Request {
+export type Request<Body = any, CustomOptions extends object = any> = CustomOptions & {
   url: string;
-  method?: HttpMethodLiteral | Method;
-  headers?: object;
-  body?: any;
-  cors?: boolean;
+  method: HttpMethodLiteral | Method;
+  headers?: HttpHeaderLiteral;
+  body?: Body;
   withCredentials?: boolean;
-}
+};
 
-export interface Response {
+export type Response<Body = any, CustomValues extends object = any> = CustomValues & {
   statusCode: number;
-  headers: object;
+  headers: HttpHeaderLiteral;
   contentType: string;
   xhr: XMLHttpRequest;
-  body: any;
-}
+  body: Body;
+};
 
 export interface NextFunction<Response> {
   (): Promise<Response>;
 }
+
+export type HttpHeaderLiteral = {
+  [key: string]: string | string[];
+};
 
 export type HttpMethodLiteral = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD" | "UPDATE";
 
@@ -39,4 +42,4 @@ export * from "./portal";
 export * from "./supportsJson";
 export * from "./withPrefix";
 export * from "./withHeader";
-export * from "./withBearer";
+export * from "./withAuth";
