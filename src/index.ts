@@ -1,6 +1,6 @@
 export interface Request {
   url: string;
-  method?: Method;
+  method?: HttpMethodLiteral | Method;
   headers?: object;
   body?: any;
   cors?: boolean;
@@ -18,6 +18,8 @@ export interface Response {
 export interface NextFunction<Response> {
   (): Promise<Response>;
 }
+
+export type HttpMethodLiteral = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD" | "UPDATE";
 
 export enum Method {
   GET = "GET",
