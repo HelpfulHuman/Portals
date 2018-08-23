@@ -83,10 +83,9 @@ export function send(request: Request): Promise<Response> {
  * given middleware.
  */
 export function createPortal<
-  CustomRequestOptions extends object = any,
-  CustomResponseValues extends object = any
-  >(...middleware: Middleware<Request<any, CustomRequestOptions>, Response<any, CustomResponseValues>>[])
-  : Portal<Request<any, CustomRequestOptions>, Response<any, CustomResponseValues>> {
+  CustomRequestOptions extends object = {},
+  CustomResponseValues extends object = {}
+  >(...middleware: Middleware<Request<any, CustomRequestOptions>, Response<any, CustomResponseValues>>[]) {
   // Add our send method as "middleware"
   middleware = middleware.concat(send as any);
 
