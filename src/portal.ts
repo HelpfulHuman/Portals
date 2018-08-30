@@ -1,14 +1,12 @@
 import { Request, Response, Middleware, HttpHeaderLiteral } from "./";
 
-export interface Portal<Request, Response> {
-  (request: Request): Promise<Response>;
-}
+export type Portal<Request, Response> = (request: Request) => Promise<Response>;
 
 /**
  * Read all response headers from the given XHR instance into a standard
  * object literal.
  */
-export function getAllHeaders(xhr: XMLHttpRequest): object {
+export function getAllHeaders(xhr: XMLHttpRequest): HttpHeaderLiteral {
   // Read all headers into a string
   let headers = xhr.getAllResponseHeaders();
 
@@ -82,28 +80,21 @@ export function send(request: Request): Promise<Response> {
  * requests.  Each request and response is passed through the
  * given middleware.
  */
-export function createPortal<
-  CustomRequestOptions extends object = {},
-  CustomResponseValues extends object = {}
-  >(...middleware: Middleware<Request<any, CustomRequestOptions>, Response<any, CustomResponseValues>>[]) {
+export function createPortal(...middleware: Middleware[]) {
   // Add our send method as "middleware"
   middleware = middleware.concat(send as any);
 
-  return function portal<ResponseBody = any, RequestBody = any>(
-    request: Request<RequestBody, CustomRequestOptions>,
-  ): Promise<Response<ResponseBody, CustomResponseValues>> {
-    // If the request body is a FormData object, set our Content-Type header
-    let contentType = (
-      request.body instanceof FormData ? "multipart/form-data" : "text/plain"
-    );
-
+  return function portal<
+    Req extends Request = Request,
+    Res extends Response = Response
+  >(request: Req): Promise<Res> {
     // Create a new copy of our request object so middleware doesn't mutate
     // a given object
     request = {
       method: "GET",
       withCredentials: false,
       headers: {
-        "Content-Type": contentType,
+        "Content-Type": "text/plain",
       },
       ...request as any,
     };
@@ -118,7 +109,7 @@ export function createPortal<
     let lastIndex = -1;
 
     // Next function invokes the next middleware in the stack (only once)
-    function next(i: number) {
+    function next(i: number): Promise<any> {
       // Warn and bail if a middleware is invoking its next() method multiple times
       if (lastIndex > i) {
         console.warn("Middleware fired its next() method more than once.");

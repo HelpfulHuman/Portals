@@ -1,4 +1,4 @@
-export type Request<Body = any, CustomOptions extends object = any> = CustomOptions & {
+export type Request<Body = any> = {
   url: string;
   method: HttpMethodLiteral | Method;
   headers?: HttpHeaderLiteral;
@@ -6,10 +6,10 @@ export type Request<Body = any, CustomOptions extends object = any> = CustomOpti
   withCredentials?: boolean;
 };
 
-export type Response<Body = any, CustomValues extends object = any> = CustomValues & {
+export type Response<Body = any> = {
   statusCode: number;
   headers: HttpHeaderLiteral;
-  contentType: string;
+  contentType: null | string;
   xhr: XMLHttpRequest;
   body: Body;
 };
@@ -34,9 +34,7 @@ export enum Method {
   UPDATE = "UPDATE",
 }
 
-export interface Middleware<Request, Response> {
-  (request: Request, next: NextFunction<Response>): Promise<Response>;
-}
+export type Middleware<Req extends Request = Request, Res extends Response = Response> = (request: Req, next: NextFunction<Res>) => Promise<Res>;
 
 export * from "./portal";
 export * from "./supportsJson";
