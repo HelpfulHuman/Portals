@@ -38,7 +38,7 @@ export function send(request: Request): Promise<Response> {
     let xhr = new XMLHttpRequest();
 
     // Open the request with the given configuration
-    xhr.open(request.method, request.url, true);
+    xhr.open(request.method!, request.url, true);
     xhr.withCredentials = !!request.withCredentials;
 
     // Add each header to the XHR request

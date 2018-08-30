@@ -9,11 +9,11 @@ export type WithHeaderValue<Req> =
  * Add a header to the request that can either override, or be overridden
  * by, the headers in the request.
  */
-export function withHeader<CustomRequestOptions extends object = any>(
+export function withHeader<Req extends Request = Request>(
   name: string,
-  value: WithHeaderValue<Request<any, CustomRequestOptions>>,
+  value: WithHeaderValue<Req>,
   override: boolean = false,
-): Middleware<Request<any, CustomRequestOptions>, any> {
+): Middleware {
   // If value isn't a function, make it one
   const getValue = (typeof value !== "function" ? () => value : value);
 
@@ -23,9 +23,9 @@ export function withHeader<CustomRequestOptions extends object = any>(
     }
 
     if (override) {
-      request.headers[name] = getValue(request);
+      request.headers[name] = getValue(request as Req);
     } else {
-      request.headers = { [name]: getValue(request), ...request.headers };
+      request.headers = { [name]: getValue(request as Req), ...request.headers };
     }
     return next();
   };

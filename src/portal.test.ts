@@ -1,7 +1,7 @@
 import { send, createPortal } from "./portal";
 import { Request, HttpHeaderLiteral } from "./";
 
-function mockXHR(resHeaders: HttpHeaderLiteral = {}, resBody?: any) {
+export function mockXHR(resHeaders: HttpHeaderLiteral = {}, resBody?: any) {
   let headersString = "";
   for (let k in resHeaders) {
     headersString += `${k}: ${resHeaders[k]}\r\n`;
@@ -19,6 +19,7 @@ function mockXHR(resHeaders: HttpHeaderLiteral = {}, resBody?: any) {
     }),
     onload() { },
     onerror(ev: ErrorEvent) { },
+    onreadystatechange() {},
   };
 
   (window as any)["XMLHttpRequest"] = jest.fn().mockImplementation(() => xhr);

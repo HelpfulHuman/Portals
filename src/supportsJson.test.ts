@@ -1,4 +1,4 @@
-import { supportsJson } from "./supportsJson";
+import { supportsJson, EncodeJSON } from "./supportsJson";
 import { Request, Response } from "./";
 
 function mockNext(contentType: string, body: any) {
@@ -57,7 +57,7 @@ describe("supportsJson()", () => {
 
   it("converts the request body value to a JSON string and sets the Content-Type to application/json when the json option is explicitly set to true", async () => {
     let body: any = { foo: "bar" };
-    let req: Request = { url: "/", headers: {}, json: true, body };
+    let req: Request & EncodeJSON = { url: "/", headers: {}, json: true, body };
     await supportsJson()(req, mockNext("", ""));
     expect(req.headers!["Content-Type"]).toEqual("application/json");
     expect(req.body).toEqual(JSON.stringify(body));

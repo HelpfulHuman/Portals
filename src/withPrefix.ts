@@ -1,4 +1,4 @@
-import { Request, Middleware } from "./";
+import { Middleware } from "./";
 
 /**
  * Applies the hostname prefix to the URL unless the given
@@ -26,7 +26,7 @@ function applyResourcePrefix(url: string, prefix: string) {
  * Adds the given prefix string to the request's URL.  Application rules
  * differ if the given prefix includes a hostname or not.
  */
-export function withPrefix(prefix: string): Middleware<Request, any> {
+export function withPrefix(prefix: string): Middleware {
   const applyPrefix = (
     prefix.indexOf("http") === 0 ? applyHostnamePrefix : applyResourcePrefix
   );

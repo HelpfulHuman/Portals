@@ -1,15 +1,14 @@
-import { Request, Response, Middleware } from "./";
+import { Middleware } from "./";
 
 export type EncodeJSON = { json?: boolean; };
 
 /**
  * Encode and parse JSON requests and responses.
  */
-export function supportsJson(): Middleware<Request<any, EncodeJSON>, Response> {
+export function supportsJson(): Middleware {
   return function (req, next) {
-
     if (
-      req.json === true ||
+      (req as any).json === true ||
       (req.body !== null &&
         (req.body instanceof Object || Array.isArray(req.body)))
     ) {
@@ -21,7 +20,7 @@ export function supportsJson(): Middleware<Request<any, EncodeJSON>, Response> {
     }
 
     return next().then(function (res) {
-      if (res.contentType.indexOf("json") > -1) {
+      if (res.contentType && res.contentType.indexOf("json") > -1) {
         res.body = JSON.parse(res.body);
       }
       return res;

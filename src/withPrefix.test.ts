@@ -1,6 +1,12 @@
 import { withPrefix } from "./withPrefix";
 
-const next = () => Promise.resolve();
+const next = () => Promise.resolve({
+  xhr: null as any,
+  statusCode: 0,
+  contentType: "",
+  headers: {},
+  body: null,
+});
 
 describe("withPrefix()", () => {
 

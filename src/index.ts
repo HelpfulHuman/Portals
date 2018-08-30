@@ -1,6 +1,6 @@
 export type Request<Body = any> = {
   url: string;
-  method: HttpMethodLiteral | Method;
+  method?: HttpMethodLiteral | Method;
   headers?: HttpHeaderLiteral;
   body?: Body;
   withCredentials?: boolean;

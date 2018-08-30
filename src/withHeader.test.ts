@@ -1,7 +1,13 @@
 import { Request } from ".";
 import { withHeader } from "./withHeader";
 
-const next = () => Promise.resolve();
+const next = () => Promise.resolve({
+  xhr: null as any,
+  statusCode: 0,
+  contentType: "",
+  headers: {},
+  body: null,
+});
 
 describe("withHeader()", () => {
 
