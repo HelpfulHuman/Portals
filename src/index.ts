@@ -41,4 +41,4 @@ export * from "./supportsJson";
 export * from "./withPrefix";
 export * from "./withHeader";
 export * from "./withAuth";
-export * from "./withXSRFCookie";
+export * from "./withXSRFToken";
