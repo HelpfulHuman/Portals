@@ -9,13 +9,12 @@
     "preversion": "npm test && npm run lint",
     "version": "npm run build",
     "postversion": "git push origin master && git push origin master --tags",
-    "prebuild": "rm -rf dist/",
     "build": "rollup -c",
     "lint": "tslint -p ./",
     "watch": "rollup -cw",
     "test": "jest",
     "tdd": "jest --watch",
-    "prepublish": "npm run test && npm run build"
+    "prepare": "npm test && rm -rf dist/ && npm run build"
   },
   "repository": {
     "type": "git",
