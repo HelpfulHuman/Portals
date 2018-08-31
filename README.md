@@ -140,3 +140,14 @@ import {withBearer} from "portals";
 withBearer(req => localStorage.getItem("apiToken"))
 // { headers: { Authorization: "Bearer ${apiToken}" } }
 ```
+
+### `withXSRFToken(cookieName = "XSRF-TOKEN", headerName = "X-XSRF-TOKEN")`
+
+Passes along the value for the specified `cookieName` to the server via the header specified by `headerName`.
+
+```ts
+import {withXSRFToken} from "portals";
+
+withXSRFToken()
+// { headers: { X-XSRF-TOKEN: "..." } }
+```
