@@ -15,7 +15,7 @@
     "watch": "rollup -cw",
     "test": "jest",
     "tdd": "jest --watch",
-    "prepublish": "npm run test"
+    "prepublish": "npm run test && npm run build"
   },
   "repository": {
     "type": "git",
