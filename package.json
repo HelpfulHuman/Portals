@@ -1,6 +1,6 @@
 {
   "name": "portals",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "Client-side HTTP requests with middleware support.",
   "main": "dist/index.js",
   "jsnext:main": "dist/index.es.js",
@@ -9,13 +9,12 @@
     "preversion": "npm test && npm run lint",
     "version": "npm run build",
     "postversion": "git push origin master && git push origin master --tags",
-    "prebuild": "rm -rf dist/",
     "build": "rollup -c",
     "lint": "tslint -p ./",
     "watch": "rollup -cw",
     "test": "jest",
     "tdd": "jest --watch",
-    "prepublish": "npm run test"
+    "prepare": "npm test && rm -rf dist/ && npm run build"
   },
   "repository": {
     "type": "git",
@@ -39,12 +38,13 @@
   "homepage": "https://github.com/HelpfulHuman/Portals",
   "devDependencies": {
     "@types/jest": "^21.1.10",
-    "jest": "^22.4.4",
+    "braces": "^2.3.2",
+    "jest": "^24.1.0",
     "rollup": "^0.53.4",
     "rollup-plugin-typescript2": "^0.9.0",
     "rollup-watch": "^4.3.1",
-    "ts-jest": "^22.4.6",
-    "tslint": "^5.11.0",
+    "ts-jest": "^24.0.0",
+    "tslint": "^5.12.1",
     "typescript": "^2.9.2"
   },
   "dependencies": {},
