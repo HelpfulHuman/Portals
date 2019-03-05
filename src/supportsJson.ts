@@ -10,7 +10,9 @@ export function supportsJson(): Middleware {
     if (
       (req as any).json === true ||
       (req.body !== null &&
-        (req.body instanceof Object || Array.isArray(req.body)))
+        (typeof req.body === "object" &&
+          !(req.body instanceof FormData) ||
+          Array.isArray(req.body)))
     ) {
       if (typeof req.headers !== "object") {
         req.headers = {};
