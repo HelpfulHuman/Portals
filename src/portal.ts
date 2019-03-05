@@ -88,6 +88,8 @@ export function createPortal(...middleware: Middleware[]) {
     Req extends Request = Request,
     Res extends Response = Response
   >(request: Req): Promise<Res> {
+    let oc_content_type = (request.headers ? request.headers["Content-Type"] : null);
+
     // Create a new copy of our request object so middleware doesn't mutate
     // a given object
     request = {
@@ -101,7 +103,7 @@ export function createPortal(...middleware: Middleware[]) {
 
     // If the request body is a FormData object, then we automatically set
     // the Content-Type regardless of middleware
-    if (request.body instanceof FormData) {
+    if (!oc_content_type && request.body instanceof FormData) {
       request.headers!["Content-Type"] = "multipart/form-data";
     }
 
